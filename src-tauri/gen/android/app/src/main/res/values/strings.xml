@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">tauri-android-keyboard</string>
+    <string name="main_activity_title">tauri-android-keyboard</string>
+</resources>
