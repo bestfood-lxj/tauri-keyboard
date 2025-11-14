@@ -22,9 +22,12 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev
         # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
         # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
+        # add the Android targets with rustup:
       - name: build apk
         run: |
           cargo install create-tauri-app --locked
+          cargo install tauri-cli
+          rustup target add aarch64-linux-android
           cargo tauri android build  -t aarch64
       - name: Upload artifact
         uses: actions/upload-artifact@v4
