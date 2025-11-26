@@ -39,6 +39,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           # download auto zip
-          name: no-signed-release
+          name: signed-release
           path: |
             src-tauri/gen/android/app/build/outputs/apk/universal/release/*-signed.apk
