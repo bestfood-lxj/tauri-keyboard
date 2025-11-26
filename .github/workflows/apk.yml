@@ -29,10 +29,16 @@ jobs:
           cargo install tauri-cli
           rustup target add aarch64-linux-android
           cargo tauri android build  -t aarch64
+          echo "$JKSFILE" | base64 --decode > my-release-key.jks
+          apksigner sign --ks my-release-key.jks --ks-key-alias "$JKS_ALIAS" --ks-pass "$JKS_PASS" --out app-universal-release-signed.apk app-universal-release-unsigned.apk
+        env:
+          JKSFILE: ${{ secrets.JKSFILE }}
+          JKS_ALIAS: ${{ secrets.JKS_ALIAS }}
+          JKS_PASS: ${{ secrets.JKS_PASS }}
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           # download auto zip
           name: no-signed-release
           path: |
-            src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/*-signed.apk
