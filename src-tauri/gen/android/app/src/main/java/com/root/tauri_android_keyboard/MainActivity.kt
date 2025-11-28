@@ -10,7 +10,7 @@ class MainActivity : TauriActivity() {
     super.onCreate(savedInstanceState)
     showSoftKeyboard()
   }
-  fun showSoftKeyboard(view: View) {
+  fun showSoftKeyboard() {
    if (view.requestFocus()) {
        val imm = getSystemService(InputMethodManager::class.java)
        imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
