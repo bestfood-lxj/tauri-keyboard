@@ -30,12 +30,12 @@ class MainActivity : TauriActivity() {
         super.onPause()
         // Stop forcing + hide keyboard immediately when leaving
         window.decorView.removeCallbacks(forceShowKeyboardRunnable)
-        hideKeyboard()
+        // hideKeyboard()
     }
 
     override fun onStop() {
         super.onStop()
-        hideKeyboard() // Extra safety
+        // hideKeyboard() // Extra safety
     }
 
     private fun hideKeyboard() {
