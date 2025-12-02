@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		.event-entry {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #eee;
+        }
+        .event-entry:last-child {
+            border-bottom: none;
+        }
+	</style>
+</head>
+<body>
+	<div>key up <button id="upbtn"> clear up</button></div>
+	<div id="up">
+		
+	</div>
+	<div>key down  <button id="downbtn"> clear down</button></div>
+	<div id="down">
+		
+	</div>
+	<script>
+		
+window.onload = function(){
+	var up = document.getElementById('up');
+	var down = document.getElementById('down');
+	var upbtn = document.getElementById('upbtn');
+	var downbtn = document.getElementById('downbtn');
+	function logUp(event){
+		const entry = document.createElement('div');
+        entry.innerHTML = `${Date.now()}
+            Key: "${event.key}"
+            
+        `;
+        /*
+        Code: "${event.code}"
+            KeyCode (deprecated): ${event.keyCode}
+            Shift: ${event.shiftKey}
+            Ctrl: ${event.ctrlKey}
+            Alt: ${event.altKey}
+            Meta: ${event.metaKey}
+            Repeat: ${event.repeat}*/
+        up.prepend(entry); // Add to the top
+        // Keep log clean, remove older entries if too many
+        if (up.children.length > 20) {
+            up.removeChild(up.lastChild);
+        }
+	}
+	function logDown(event){
+		const entry = document.createElement('div');
+        entry.innerHTML = `${Date.now()}
+            Key: "${event.key}"
+            
+        `;
+        /*
+        Code: "${event.code}"
+            KeyCode (deprecated): ${event.keyCode}
+            Shift: ${event.shiftKey}
+            Ctrl: ${event.ctrlKey}
+            Alt: ${event.altKey}
+            Meta: ${event.metaKey}
+            Repeat: ${event.repeat}*/
+        down.prepend(entry); // Add to the top
+        // Keep log clean, remove older entries if too many
+        if (down.children.length > 20) {
+            down.removeChild(down.lastChild);
+        }
+	}
+	 document.addEventListener('keydown', (event) => {console.log('23423');
+        logDown(event);
+        // Example: Prevent default action for 'Space' key
+        if (event.code === 'Space') {
+            event.preventDefault();
+        }
+    });
+
+    // Bind keyup event to the document
+    document.addEventListener('keyup', (event) => {console.log('123423');
+        logUp( event);
+    });
+    upbtn.addEventListener('click',(event)=>{
+    	up.innerHTML=""
+    })
+    downbtn.addEventListener('click',(event)=>{
+    	down.innerHTML=""
+    })
+}
+
+
+	</script>
+</body>
+</html>
