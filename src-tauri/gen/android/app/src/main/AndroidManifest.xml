@@ -16,7 +16,8 @@
             android:label="@string/main_activity_title"
             android:name=".MainActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
-            android:exported="true">
+            android:exported="true"
+            android:usesCleartextTraffic="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
