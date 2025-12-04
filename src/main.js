@@ -8,6 +8,4 @@ async function greet() {
   greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-
-});
+window.addEventListener("DOMContentLoaded", () => {});
