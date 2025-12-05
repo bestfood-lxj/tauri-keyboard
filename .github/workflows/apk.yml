@@ -20,7 +20,7 @@ jobs:
           cd qwerty-learner
           npm install
           npm run build
-          mv dist qwerty-learner
+          mv build qwerty-learner
           mkdir qwerty
           mv qwerty ../../src/assets/
           cd ..
