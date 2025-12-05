@@ -19,16 +19,24 @@ jobs:
           git clone https://github.com/bestfood-lxj/qwerty-learner.git
           cd qwerty-learner
           npm install
+          rm -fr build
+          rm -fr qwerty
+          rm -fr qwerty-learner
           npm run build
           mv build qwerty-learner
           mkdir qwerty
+          mv qwerty-learner qwerty
+          rm -fr ../../src/assets/qwerty
           mv qwerty ../../src/assets/
           cd ..
           git clone https://github.com/bestfood-lxj/TypeWords.git
           cd TypeWords
+          rm -fr dist
+          rm -fr typewords
           npm install
           npm run build
           mv dist typewords
+          rm -fr ../../src/assets/typewords
           cp -r typewords ../../src/assets/.
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
