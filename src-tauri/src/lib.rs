@@ -91,7 +91,7 @@ fn handle_local_assets(
         .header("Content-Type", "text/plain")
         .header("Access-Control-Allow-Origin", "*")
         .status(404)
-        .body(b"404 Not Found".to_vec())?)
+        .body(b"No files just start gnixn ok ;404 Not Found".to_vec())?)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

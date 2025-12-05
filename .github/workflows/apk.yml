@@ -49,6 +49,9 @@ jobs:
           cargo install create-tauri-app --locked
           cargo install tauri-cli
           rustup target add aarch64-linux-android
+          cd src-tauri
+          cargo clean
+          cd ..
           cargo tauri android build  -t aarch64
           echo "$JKSFILE" | base64 --decode > my-release-key.jks
           #$ANDROID_SDK/build-tools/35.0.0/apksigner sign --ks my-release-key.jks --ks-key-alias "$JKS_ALIAS" --ks-pass "$JKS_PASS" --out app-universal-release-signed.apk app-universal-release-unsigned.apk
