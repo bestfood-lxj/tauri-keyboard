@@ -12,7 +12,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
+      - name: Qwerty and Typewords build
+        run: |
+          mkdir .tmp
+          cd .tmp
+          git clone https://github.com/bestfood-lxj/qwerty-learner.git
+          cd qwerty-learner
+          npm install
+          npm run build
+          mv dist qwerty-learner
+          mkdir qwerty
+          mv qwerty ../../src/assets/
+          cd ..
+          git clone https://github.com/bestfood-lxj/TypeWords.git
+          cd TypeWords
+          npm install
+          npm run build
+          mv dist typewords
+          cp -r typewords ../../src/assets/.
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2

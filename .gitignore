@@ -24,3 +24,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# assets
+src/assets/typewords
+src/assets/qwerty

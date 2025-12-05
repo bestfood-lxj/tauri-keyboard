@@ -1,5 +1,10 @@
-use std::collections::HashMap;
-use tauri::AppHandle;
+use include_dir::{include_dir, Dir};
+
+use tauri::http::StatusCode;
+
+// Option 1: Serve files embedded at compile time (recommended for static assets)
+// Put your files in `assets/` folder in the project root
+static EMBEDDED_ASSETS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/../src/assets");
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -13,26 +18,26 @@ async fn test_local_assets() -> Result<serde_json::Value, String> {
 
     let mut results = HashMap::new();
 
-    // Test myapp.localhost
+    // Test qwerty.localhost
     let localhost_tests = vec![
-        ("index", "http://myapp.localhost/"),
-        ("config", "http://myapp.localhost/config.json"),
-        ("favicon", "http://myapp.localhost/favicon.ico"),
-        ("logo", "http://myapp.localhost/logo.png"),
+        ("index", "http://qwerty.localhost/"),
+        ("config", "http://qwerty.localhost/config.json"),
+        ("favicon", "http://qwerty.localhost/favicon.ico"),
+        ("logo", "http://qwerty.localhost/logo.png"),
     ];
 
     let mut localhost_results = HashMap::new();
     for (name, url) in localhost_tests {
         localhost_results.insert(name.to_string(), format!("URL: {}", url));
     }
-    results.insert("myapp.localhost".to_string(), localhost_results);
+    results.insert("qwerty.localhost".to_string(), localhost_results);
 
     // Test 127.0.0.1:3000
     let ip_tests = vec![
-        ("index", "myapp://127.0.0.1:3000/"),
-        ("config", "myapp://127.0.0.1:3000/config.json"),
-        ("favicon", "myapp://127.0.0.1:3000/favicon.ico"),
-        ("logo", "myapp://127.0.0.1:3000/logo.png"),
+        ("index", "qwerty://127.0.0.1:3000/"),
+        ("config", "qwerty://127.0.0.1:3000/config.json"),
+        ("favicon", "qwerty://127.0.0.1:3000/favicon.ico"),
+        ("logo", "qwerty://127.0.0.1:3000/logo.png"),
     ];
 
     let mut ip_results = HashMap::new();
@@ -45,109 +50,48 @@ async fn test_local_assets() -> Result<serde_json::Value, String> {
 }
 
 fn handle_local_assets(
-    _app: &AppHandle,
+    host: &str,
     request: &tauri::http::Request<Vec<u8>>,
 ) -> Result<tauri::http::Response<Vec<u8>>, Box<dyn std::error::Error>> {
-    let host = request.uri().host().unwrap_or("");
-    let path = request.uri().path();
+    let folder = host.to_string();
+    let path = folder.clone() + request.uri().path();
+    let index_html = folder + "/" + "index.html";
 
-    // Define assets for different hosts
-    let mut host_assets: HashMap<&str, HashMap<&str, (&str, Vec<u8>)>> = HashMap::new();
-
-    // Host 1: myapp.localhost
-    let mut host1_assets = HashMap::new();
-    host1_assets.insert(
-        "/favicon.ico",
-        (
-            "image/x-icon",
-            include_bytes!("../icons/32x32.png").to_vec(),
-        ),
-    );
-    host1_assets.insert(
-        "/logo.png",
-        ("image/png", include_bytes!("../icons/128x128.png").to_vec()),
-    );
-    host1_assets.insert(
-        "/config.json",
-        (
-            "application/json",
-            br#"{"host": "myapp.localhost", "version": "1.0"}"#.to_vec(),
-        ),
-    );
-
-    // Host 2: 127.0.0.1:3000
-    let mut host2_assets = HashMap::new();
-    host2_assets.insert(
-        "/favicon.ico",
-        (
-            "image/x-icon",
-            include_bytes!("../icons/32x32.png").to_vec(),
-        ),
-    );
-    host2_assets.insert(
-        "/logo.png",
-        ("image/png", include_bytes!("../icons/128x128.png").to_vec()),
-    );
-    host2_assets.insert(
-        "/config.json",
-        (
-            "application/json",
-            br#"{"host": "127.0.0.1:3000", "version": "1.0"}"#.to_vec(),
-        ),
-    );
-
-    host_assets.insert("myapp.localhost", host1_assets);
-    host_assets.insert("127.0.0.1:3000", host2_assets);
-
-    // Serve assets based on host
-    if let Some(assets) = host_assets.get(host) {
-        if let Some((content_type, content)) = assets.get(path) {
-            return Ok(tauri::http::Response::builder()
-                .header("Content-Type", *content_type)
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Cache-Control", "public, max-age=3600")
-                .status(200)
-                .body(content.clone())?);
-        }
+    // Security: prevent directory traversal
+    if path.contains("..") || path.contains('\\') || path.contains("_vercel") {
+        return Ok(tauri::http::Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body("Invalid path".as_bytes().to_vec())?);
     }
 
-    // Default response for unknown paths
-    let default_content = match path {
-        "/" | "/index.html" => {
-            let html = format!(
-                r#"<!DOCTYPE html>
-<html>
-<head>
-    <title>Local Assets - {}</title>
-    <link rel="icon" href="/favicon.ico">
-</head>
-<body>
-    <h1>Local Assets Server</h1>
-    <p>Host: {}</p>
-    <p>Available assets:</p>
-    <ul>
-        <li><a href="/favicon.ico">/favicon.ico</a></li>
-        <li><a href="/logo.png">/logo.png</a></li>
-        <li><a href="/config.json">/config.json</a></li>
-    </ul>
-</body>
-</html>"#,
-                host, host
-            );
-            ("text/html", html.into_bytes())
-        }
-        _ => ("text/plain", b"404 Not Found".to_vec()),
-    };
+    println!("Loading {}", path);
+    // Try to get the file from embedded assets
+    if let Some(file) = EMBEDDED_ASSETS.get_file(&path) {
+        let body = file.contents().to_vec();
+        let mime = mime_guess::from_path(path).first_or_octet_stream();
+        return Ok(tauri::http::Response::builder()
+            .status(StatusCode::OK)
+            .header("Content-Type", mime.as_ref())
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Content-Length", body.len())
+            .body(body)?);
+    } else if let Some(file) = EMBEDDED_ASSETS.get_file(&index_html) {
+        println!("Loading {}", index_html);
+        let body = file.contents().to_vec();
+        let mime = mime_guess::from_path(index_html).first_or_octet_stream();
+        return Ok(tauri::http::Response::builder()
+            .status(StatusCode::OK)
+            .header("Content-Type", mime.as_ref())
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Content-Length", body.len())
+            .body(body)?);
+    }
 
     Ok(tauri::http::Response::builder()
-        .header("Content-Type", default_content.0)
+        .header("Content-Type", "text/plain")
         .header("Access-Control-Allow-Origin", "*")
-        .status(if path == "/" || path == "/index.html" {
-            200
-        } else {
-            404
-        })
-        .body(default_content.1)?)
+        .status(404)
+        .body(b"404 Not Found".to_vec())?)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -155,8 +99,16 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet, test_local_assets])
-        .register_uri_scheme_protocol("myapp", |ctx, request| {
-            handle_local_assets(ctx.app_handle(), &request).unwrap_or_else(|_| {
+        // .register_uri_scheme_protocol("qwerty", |_ctx, request| {
+        //     handle_local_assets("qwerty", &request).unwrap_or_else(|_| {
+        //         tauri::http::Response::builder()
+        //             .status(500)
+        //             .body(b"Internal Server Error".to_vec())
+        //             .unwrap()
+        //     })
+        // })
+        .register_uri_scheme_protocol("typewords", |_ctx, request| {
+            handle_local_assets("typewords", &request).unwrap_or_else(|_| {
                 tauri::http::Response::builder()
                     .status(500)
                     .body(b"Internal Server Error".to_vec())
@@ -166,11 +118,9 @@ pub fn run() {
         .setup(|_app| {
             // Log the available hosts
             println!("Local assets server configured for hosts:");
-            println!("- myapp.localhost");
-            println!("- 127.0.0.1:3000");
-            println!(
-                "Access via: http://myapp.localhost/ or myapp://127.0.0.1:3000/"
-            );
+            println!("- qwerty.localhost");
+            println!("- typewords.localhost");
+            println!("Access via: http://qwerty.localhost/ or http://typewords.localhost/");
             Ok(())
         })
         .run(tauri::generate_context!())

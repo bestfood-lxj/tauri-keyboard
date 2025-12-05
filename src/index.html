@@ -41,16 +41,19 @@
 
             <div class="local-assets-test">
                 <h2>Local Assets Testing</h2>
-                <h2><a href="http://myapp.localhost">http://myapp.localhost</a></h2>
-                <h2><a href="http://127.0.0.1:3000/">http://127.0.0.1:3000/</a></h2>
-                <h2><a href="https://127.0.0.1:3000/">https://127.0.0.1:3000/</a></h2>
+                <h2>
+                    <a href="http://qwerty.localhost/index.html"
+                        >http://qwerty.localhost</a
+                    >
+                </h2>
+                <h2>
+                    <a href="http://typewords.localhost"
+                        >http://typewords.localhost</a
+                    >
+                </h2>
                 <p>Test local assets from different hosts:</p>
 
                 <div class="host-buttons">
-                    <button onclick="testLocalhost()">
-                        Test localhost:3000
-                    </button>
-                    <button onclick="testIpHost()">Test 127.0.0.1:3000</button>
                     <button onclick="testWithTauriCommand()">
                         Test via Rust Command
                     </button>
@@ -74,99 +77,6 @@
             <p id="greet-msg"></p>
 
             <script>
-                async function testLocalhost() {
-                    const content =
-                        document.getElementById("localhost-content");
-                    content.innerHTML = "<p>Testing localhost:3000...</p>";
-
-                    try {
-                        // Test different assets using fetch
-                        const tests = [
-                            {
-                                url: "http://myapp.localhost",
-                                name: "Index Page",
-                            },
-                            {
-                                url: "http://myapp.localhostconfig.json",
-                                name: "Config JSON",
-                            },
-                            {
-                                url: "http://myapp.localhostfavicon.ico",
-                                name: "Favicon",
-                            },
-                            {
-                                url: "http://myapp.localhostlogo.png",
-                                name: "Logo PNG",
-                            },
-                        ];
-
-                        let results = "<ul>";
-                        for (const test of tests) {
-                            try {
-                                const response = await fetch(test.url);
-                                const status = response.ok
-                                    ? "✅ Success"
-                                    : "❌ Failed";
-                                results += `<li>${test.name}: ${status} (${response.status})</li>`;
-                            } catch (error) {
-                                results += `<li>${test.name}: ❌ Error - ${error.message}</li>`;
-                            }
-                        }
-                        results += "</ul>";
-                        content.innerHTML = results;
-                    } catch (error) {
-                        content.innerHTML = `<p>Error: ${error.message}</p>`;
-                    }
-                }
-
-                async function testIpHost() {
-                    const content = document.getElementById("ip-content");
-                    content.innerHTML = "<p>Testing 127.0.0.1:3000...</p>";
-
-                    try {
-                        // Test different assets using fetch
-                        const tests = [
-                            {
-                                url: "http://127.0.0.1:3000/",
-                                name: "http Index Page",
-                            },
-                            {
-                                url: "local-assets://127.0.0.1:3000/",
-                                name: "Index Page",
-                            },
-                            {
-                                url: "local-assets://127.0.0.1:3000/config.json",
-                                name: "Config JSON",
-                            },
-                            {
-                                url: "local-assets://127.0.0.1:3000/favicon.ico",
-                                name: "Favicon",
-                            },
-                            {
-                                url: "local-assets://127.0.0.1:3000/logo.png",
-                                name: "Logo PNG",
-                            },
-                        ];
-
-                        let results = "<ul>";
-                        for (const test of tests) {
-                            try {
-                                const response = await fetch(test.url);
-                                const status = response.ok
-                                    ? "✅ Success"
-                                    : "❌ Failed";
-                                results += `<li>${test.name}: ${status} (${response.status})</li>`;
-                            } catch (error) {
-                                results += `<li>${test.name}: ❌ Error - ${error.message}</li>`;
-                            }
-                        }
-                        results += "</ul>";
-                        content.innerHTML = results;
-                    } catch (error) {
-                        content.innerHTML = `<p>Error: ${error.message}</p>`;
-                    }
-                }
-
                 async function testWithTauriCommand() {
                     try {
                         const result = await invoke("test_local_assets");
