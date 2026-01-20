@@ -9,3 +9,5 @@ sign_reslear_apk:
 	apksigner sign --ks my-release-key.jks --ks-key-alias my-alias --out my-app-signed.apk my-app-unsigned.apk
 build_apk:
 	cargo tauri android build  -t aarch64
+sds:
+        ls

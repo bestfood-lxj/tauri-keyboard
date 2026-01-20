@@ -32,11 +32,12 @@ jobs:
           cd ..
           git clone https://github.com/bestfood-lxj/TypeWords.git
           cd TypeWords
+          rm -fr .output
           rm -fr dist
           rm -fr typewords
           npm install
           npm run build
-          mv dist typewords
+          mv .output/public typewords
           rm -fr ../../src/assets/typewords
           cp -r typewords ../../src/assets/.
       - name: install Rust stable
