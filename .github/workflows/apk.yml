@@ -17,7 +17,7 @@ jobs:
         run: |
           git clone https://github.com/bestfood-lxj/TypeWords.git
           cd TypeWords
-          git checkout remotes/oriing/master_bf_v2
+          git checkout remotes/origin/master_bf_v2
           rm -fr .output
           rm -fr typewords
           npm install -g pnpm
