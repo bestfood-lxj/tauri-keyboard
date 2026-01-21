@@ -12,42 +12,6 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-#[tauri::command]
-async fn test_local_assets() -> Result<serde_json::Value, String> {
-    use std::collections::HashMap;
-
-    let mut results = HashMap::new();
-
-    // Test qwerty.localhost
-    let localhost_tests = vec![
-        ("index", "http://qwerty.localhost/"),
-        ("config", "http://qwerty.localhost/config.json"),
-        ("favicon", "http://qwerty.localhost/favicon.ico"),
-        ("logo", "http://qwerty.localhost/logo.png"),
-    ];
-
-    let mut localhost_results = HashMap::new();
-    for (name, url) in localhost_tests {
-        localhost_results.insert(name.to_string(), format!("URL: {}", url));
-    }
-    results.insert("qwerty.localhost".to_string(), localhost_results);
-
-    // Test 127.0.0.1:3000
-    let ip_tests = vec![
-        ("index", "qwerty://127.0.0.1:3000/"),
-        ("config", "qwerty://127.0.0.1:3000/config.json"),
-        ("favicon", "qwerty://127.0.0.1:3000/favicon.ico"),
-        ("logo", "qwerty://127.0.0.1:3000/logo.png"),
-    ];
-
-    let mut ip_results = HashMap::new();
-    for (name, url) in ip_tests {
-        ip_results.insert(name.to_string(), format!("URL: {}", url));
-    }
-    results.insert("127.0.0.1:3000".to_string(), ip_results);
-
-    Ok(serde_json::to_value(results).unwrap())
-}
 
 fn handle_local_assets(
     host: &str,
@@ -91,22 +55,14 @@ fn handle_local_assets(
         .header("Content-Type", "text/plain")
         .header("Access-Control-Allow-Origin", "*")
         .status(404)
-        .body(b"No files just start gnixn ok ;404 Not Found".to_vec())?)
+        .body(b"<body style=\"padding: 100px 20px;\">No files just start gnixn ok ;404 Not Found</body>".to_vec())?)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, test_local_assets])
-        // .register_uri_scheme_protocol("qwerty", |_ctx, request| {
-        //     handle_local_assets("qwerty", &request).unwrap_or_else(|_| {
-        //         tauri::http::Response::builder()
-        //             .status(500)
-        //             .body(b"Internal Server Error".to_vec())
-        //             .unwrap()
-        //     })
-        // })
+        .invoke_handler(tauri::generate_handler![greet])
         .register_uri_scheme_protocol("typewords", |_ctx, request| {
             handle_local_assets("typewords", &request).unwrap_or_else(|_| {
                 tauri::http::Response::builder()
@@ -118,9 +74,8 @@ pub fn run() {
         .setup(|_app| {
             // Log the available hosts
             println!("Local assets server configured for hosts:");
-            println!("- qwerty.localhost");
             println!("- typewords.localhost");
-            println!("Access via: http://qwerty.localhost/ or http://typewords.localhost/");
+            println!("Access via:  http://typewords.localhost/");
             Ok(())
         })
         .run(tauri::generate_context!())

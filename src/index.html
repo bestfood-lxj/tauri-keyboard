@@ -5,10 +5,7 @@
         <link rel="stylesheet" href="styles.css" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tauri App - Local Assets Test</title>
-        <script type="module" src="/main.js" defer></script>
-        <script>
-            const { invoke } = window.__TAURI__.core;
-        </script>
+
     </head>
 
     <body>
@@ -23,93 +20,33 @@
                         alt="test logo"
                     />
                 </a>
-                <a href="http://192.168.1.159/qwerty-learner/">
-                    <img
-                        src="/assets/tauri.svg"
-                        class="logo tauri"
-                        alt="Tauri logo"
-                    />
-                </a>
-                <a href="https://typewords.cc/">
-                    <img
-                        src="/assets/tauri.svg"
-                        class="logo tauri"
-                        alt="Tauri logo"
-                    />
-                </a>
+               
             </div>
 
             <div class="local-assets-test">
-                <h2>Local Assets Testing</h2>
-                <h2>
-                    <a href="http://127.0.0.4:8080/qwerty-learner/index.html"
-                        >http://127.0.0.4:8080/qwerty-learner/index.html</a>
-                </h2>
-                <h2>
-                    <a href="http://127.0.0.5:8080"
-                        >http://127.0.0.5:8080</a>
-                </h2>
-                <h2>
-                    <a href="http://qwerty.localhost/qwerty-learner/index.html"
-                        >http://qwerty.localhost/qwerty-learner/index.html</a>
-                </h2>
+               
+               
                 <h2>
                     <a href="http://typewords.localhost"
                         >http://typewords.localhost</a>
                 </h2>
-                <p>Test local assets from different hosts:</p>
-
-                <div class="host-buttons">
-                    <button onclick="testWithTauriCommand()">
-                        Test via Rust Command
-                    </button>
-                </div>
-
-                <div id="test-results">
-                    <h3>Test Results:</h3>
-                    <div id="localhost-results" class="results-section">
-                        <h4>localhost:3000 Results:</h4>
-                        <div id="localhost-content"></div>
-                    </div>
-                    <div id="ip-results" class="results-section">
-                        <h4>127.0.0.1:3000 Results:</h4>
-                        <div id="ip-content"></div>
-                    </div>
-                </div>
+                <h2>
+                    <a href="http://typewords.localhost/index.html"
+                        >http://typewords.localhost/index.html</a>
+                </h2>
+                <h2>
+                    <a href="http://typewords.localhost/articles"
+                        >http://typewords.localhost/articles</a>
+                </h2>
+                <h2>
+                    <a href="http://typewords.localhost/articles/index.html"
+                        >http://typewords.localhost/articles/index.html</a>
+                </h2>
             </div>
 
-            <p>Click on the Tauri logo to learn more about the framework</p>
 
-            <p id="greet-msg"></p>
 
-            <script>
-                async function testWithTauriCommand() {
-                    try {
-                        const result = await invoke("test_local_assets");
-                        console.log("Tauri command result:", result);
-
-                        const testResults =
-                            document.getElementById("test-results");
-                        let html = "<h3>Test Results from Rust:</h3>";
-
-                        for (const [host, assets] of Object.entries(result)) {
-                            html += `<div class="results-section">`;
-                            html += `<h4>${host} Results:</h4>`;
-                            html += `<ul>`;
-                            for (const [name, url] of Object.entries(assets)) {
-                                html += `<li>${name}: ${url}</li>`;
-                            }
-                            html += `</ul></div>`;
-                        }
-
-                        testResults.innerHTML = html;
-                    } catch (error) {
-                        console.error("Error calling Tauri command:", error);
-                        document.getElementById("test-results").innerHTML =
-                            `<p>Error: ${error.message}</p>`;
-                    }
-                }
-            </script>
+            
         </main>
     </body>
 </html>
