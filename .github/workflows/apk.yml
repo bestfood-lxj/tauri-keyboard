@@ -16,6 +16,7 @@ jobs:
         #if: ${{ github.ref == 'refs/heads/xsldsld' }}
         run: |
           git clone https://github.com/bestfood-lxj/TypeWords.git
+          pushd
           cd TypeWords
           git checkout remotes/origin/master_bf_v2
           rm -fr .output
@@ -24,8 +25,9 @@ jobs:
           pnpm install
           pnpm run build
           mv .output/public typewords
-          rm -fr ../../src/assets/typewords
-          cp -r typewords ../../src/assets/.
+          popd
+          rm -fr ./src/assets/typewords
+          cp -r TypeWords/typewords ./src/assets/.
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
