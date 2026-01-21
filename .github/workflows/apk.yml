@@ -16,7 +16,7 @@ jobs:
         #if: ${{ github.ref == 'refs/heads/xsldsld' }}
         run: |
           git clone https://github.com/bestfood-lxj/TypeWords.git
-          pushd
+          pushd .
           cd TypeWords
           git checkout remotes/origin/master_bf_v2
           rm -fr .output
