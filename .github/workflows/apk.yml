@@ -12,28 +12,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: Qwerty and Typewords build
-        if: ${{ github.ref == 'refs/heads/xsldsld' }}
+      - name: Typewords build
+        #if: ${{ github.ref == 'refs/heads/xsldsld' }}
         run: |
-          mkdir .tmp
-          cd .tmp
-          git clone https://github.com/bestfood-lxj/qwerty-learner.git
-          cd qwerty-learner
-          npm install
-          rm -fr build
-          rm -fr qwerty
-          rm -fr qwerty-learner
-          npm run build
-          mv build qwerty-learner
-          mkdir qwerty
-          mv qwerty-learner qwerty
-          rm -fr ../../src/assets/qwerty
-          mv qwerty ../../src/assets/
-          cd ..
           git clone https://github.com/bestfood-lxj/TypeWords.git
           cd TypeWords
           rm -fr .output
-          rm -fr dist
           rm -fr typewords
           npm install
           npm run build

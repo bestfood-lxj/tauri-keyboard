@@ -15,11 +15,12 @@ name = "tauri_android_keyboard_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.5.1" }
+tauri-build = { version = "2", features = [] }
 
 [dependencies]
-log = "0.4"
-tauri = { version = "2.9.2" }
-tauri-plugin-log = "2"
+tauri = { version = "2", features = ["protocol-asset", "custom-protocol"] }
+tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+mime_guess = "2.0.5"
+include_dir = { version = "0.7.4", features = ["metadata"] }

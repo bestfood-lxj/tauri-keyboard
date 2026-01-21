@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    tauri_android_keyboard_lib::run();
+    tauri_android_keyboard_lib::run()
 }
