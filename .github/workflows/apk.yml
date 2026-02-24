@@ -23,8 +23,10 @@ jobs:
           rm -fr typewords
           npm install -g pnpm
           pnpm install
-          pnpm run build-web
-          mv .output/public typewords
+          pnpm run build
+          ls
+          ls .output || echo "no no no"
+          mv dist typewords
           popd
           rm -fr ./src/assets/typewords
           cp -r TypeWords/typewords ./src/assets/.
