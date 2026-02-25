@@ -1,7 +1,6 @@
 package com.root.tauri_android_keyboard
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import android.view.inputmethod.InputMethodManager
 import android.view.WindowManager
 import android.content.Context
@@ -9,7 +8,6 @@ import android.content.Context
 class MainActivity : TauriActivity() {
   private var isKeyboardForced = false
   override fun onCreate(savedInstanceState: Bundle?) {
-    enableEdgeToEdge()
     super.onCreate(savedInstanceState)
     // Very important for Tauri + WebView
     window.setSoftInputMode(
