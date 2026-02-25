@@ -23,6 +23,8 @@ jobs:
           rm -fr typewords
           npm install -g pnpm
           pnpm install --no-frozen-lockfile
+          rm -fr .nuxt
+          rm -fr node_modules/.cache
           pnpm run build
           ls
           ls .output || echo "no no no"
