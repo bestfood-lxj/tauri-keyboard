@@ -62,6 +62,7 @@ fn handle_local_assets(
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_tts::init())
         .invoke_handler(tauri::generate_handler![greet])
         .register_uri_scheme_protocol("typewords", |_ctx, request| {
             handle_local_assets("typewords", &request).unwrap_or_else(|_| {
