@@ -25,10 +25,10 @@ jobs:
           pnpm install --no-frozen-lockfile
           rm -fr .nuxt
           rm -fr node_modules/.cache
-          pnpm run build
+          pnpm run generate
           ls
           ls .output || echo "no no no"
-          mv dist typewords
+          mv .output/public typewords
           popd
           rm -fr ./src/assets/typewords
           cp -r TypeWords/typewords ./src/assets/.
