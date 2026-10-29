@@ -5,7 +5,7 @@ jobs:
   apk:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: setup node
@@ -38,6 +38,10 @@ jobs:
         with:
           cache-on-failure: true
           workspaces: ./src-tauri -> target
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: install dependencies
         run: |
           sudo apt-get update
