@@ -40,4 +40,9 @@ window.debug_dev={
     runSpeak:()=>{
         speak({text: "one two three",})
     },
+    goUrl(){
+        var urlInp = document.querySelector('#urlId');
+        var url = urlInp.value;
+        window.location.href = url.trim();
+    },
 }
