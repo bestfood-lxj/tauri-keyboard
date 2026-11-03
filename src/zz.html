@@ -14,6 +14,7 @@
 	<input type="text" id="inp">
 	<div id="box"></div>
 	<div id="box1"></div>
+	<div id="box2"></div>
 	<script>
 // 简单的 keyCode 转 key 映射（可按需扩充）
 function keyCodeToKey(code) {
@@ -95,7 +96,20 @@ window.onload = function(){
 		console.log(ev,JSON.stringify(res))
 		box1.innerText = JSON.stringify(res)
 	}
-
+	inp.oninput=function(eve){
+		var box = document.querySelector("#box2");
+		console.log(eve)
+		let ev = eve;
+		let res = {
+			keyCode:ev.keyCode,
+			key:ev.key,
+			code:ev.code,
+			type:ev.type,
+			inputType:ev.inputType,
+		}
+		console.log(ev,JSON.stringify(res))
+		box.innerText = JSON.stringify(res)
+	}
 }
 
 	</script>
